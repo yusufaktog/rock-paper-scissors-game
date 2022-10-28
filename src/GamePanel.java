@@ -1,14 +1,9 @@
-import Computer;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-/**
- *
- * @author joseph
- */
+
 public class GamePanel extends JPanel implements ActionListener {
 
     private int rounds;
@@ -43,7 +38,7 @@ public class GamePanel extends JPanel implements ActionListener {
     JTextField winnerInfoText;
 
     public GamePanel() {
-        
+
         getRoundInput();
         loadPreferences();
         instantiateComponents();
@@ -65,7 +60,8 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    private void addTextField(JPanel parentComponent, JTextField textField, int x, int y, int width, int height, Font font, String text, Color bColor, Color fColor) {
+    private void addTextField(JPanel parentComponent, JTextField textField, int x, int y,
+                              int width, int height, Font font, String text, Color bColor, Color fColor) {
 
         textField.setBounds(x, y, width, height);
         textField.setFont(font);
@@ -80,27 +76,35 @@ public class GamePanel extends JPanel implements ActionListener {
 
     final void getRoundInput() {
         try {
-            this.rounds = Math.abs(Integer.valueOf(JOptionPane.showInputDialog(null, "enter rounds ", "rounds ?", JOptionPane.QUESTION_MESSAGE)));
+            this.rounds = Math.abs(Integer.parseInt(JOptionPane.showInputDialog(null,
+                    "enter rounds ", "rounds ?", JOptionPane.QUESTION_MESSAGE)));
 
         } catch (java.lang.NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Invalid round number.\nThe round value is set to its default value!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Invalid round number.\nThe round value is set to its default value!", "ERROR!",
+                    JOptionPane.ERROR_MESSAGE);
             this.rounds = 10;
         }
-        
+
     }
 
     final void initializeComponents() {
 
         symbols = new GameSymbol[]{rockSymbol, paperSymbol, scissorsSymbol};
 
-        addComponent(humanPanel, this, 450, 100, 275, 400, null, Color.darkGray);
-        addComponent(computerPanel, this, 75, 100, 275, 400, null, Color.darkGray);
+        addComponent(humanPanel, this, 75, 100, 275, 400, null, Color.darkGray);
+        addComponent(computerPanel, this, 450, 100, 275, 400, null, Color.darkGray);
 
-        addTextField(computerPanel, computerScoreText, 0, 0, 275, 50, new Font("Ink Free", Font.BOLD, 30), "Computer: " + computerPlayer.getScore(), Color.orange, Color.black);
-        addTextField(humanPanel, humanScoreText, 0, 0, 275, 50, new Font("Ink Free", Font.BOLD, 30), "You: " + humanPlayer.getScore(), Color.orange, Color.black);
-        addTextField(this, chooseSymbolText, 0, 520, 800, 50, new Font("Algerian", Font.ITALIC, 30), "Please choose a symbol", Color.black, Color.red);
-        addTextField(this, roundCountText, 0, 0, 800, 40, new Font("Algerian", Font.ITALIC, 25), rounds + " rounds left", Color.black, Color.red);
-        addTextField(this, winnerInfoText, 0, 40, 800, 40, new Font("Times New Roman", Font.ITALIC, 25), "", Color.black, Color.green);
+        addTextField(computerPanel, computerScoreText, 0, 0, 275, 50,
+                new Font("Ink Free", Font.BOLD, 30), "Computer: " + computerPlayer.getScore(), Color.orange, Color.black);
+        addTextField(humanPanel, humanScoreText, 0, 0, 275, 50,
+                new Font("Ink Free", Font.BOLD, 30), "You: " + humanPlayer.getScore(), Color.orange, Color.black);
+        addTextField(this, chooseSymbolText, 0, 520, 800, 50,
+                new Font("Algerian", Font.ITALIC, 30), "Please choose a symbol", Color.black, Color.red);
+        addTextField(this, roundCountText, 0, 0, 800, 40,
+                new Font("Algerian", Font.ITALIC, 25), rounds + " rounds left", Color.black, Color.red);
+        addTextField(this, winnerInfoText, 0, 40, 800, 40,
+                new Font("Times New Roman", Font.ITALIC, 25), "", Color.black, Color.green);
 
         ButtonHandler.loadButton(paperButton, 100, 100, 100, 600, paperSymbol.getImage(), this, this);
         ButtonHandler.loadButton(scissorsButton, 100, 100, 350, 600, scissorsSymbol.getImage(), this, this);
@@ -110,11 +114,12 @@ public class GamePanel extends JPanel implements ActionListener {
         addComponent(computerLabel, computerPanel, 50, 0, 275, 350, null, Color.black);
     }
 
+
     final void instantiateComponents() {
 
-        rockSymbol = new RockSymbol("rockSymbol", 1, ImageHandler.readImage("resources/rock.png"));
-        paperSymbol = new PaperSymbol("paperSymbol", 2, ImageHandler.readImage("resources/paper.png"));
-        scissorsSymbol = new ScissorsSymbol("scissorsSymbol", 3, ImageHandler.readImage("resources/scissors.png"));
+        rockSymbol = new RockSymbol("rockSymbol", ImageHandler.readImage("resources/rock.png"));
+        paperSymbol = new PaperSymbol("paperSymbol", ImageHandler.readImage("resources/paper.png"));
+        scissorsSymbol = new ScissorsSymbol("scissorsSymbol", ImageHandler.readImage("resources/scissors.png"));
 
         rockButton = new JButton();
         paperButton = new JButton();
@@ -178,12 +183,12 @@ public class GamePanel extends JPanel implements ActionListener {
         playerChoice.setOwner(humanPlayer);
         computerChoice.setOwner(computerPlayer);
 
-        Player winner = null;
+        Player winner;
         if (computerChoice.getPriority() == playerChoice.getPriority()) {
             winnerInfoText.setText("Tie!");
 
         } else {
-            winner = comparator.determineWinner(playerChoice, computerChoice).getOwner();
+            winner = determineWinner(playerChoice, computerChoice).getOwner();
             winnerInfoText.setText(winner.getName() + " wins");
             winner.setScore(winner.getScore() + 1);
             updateScores();
@@ -192,11 +197,15 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
+    public GameSymbol determineWinner(GameSymbol g1, GameSymbol g2) {
+        int comparisonResult = comparator.compare(g1, g2);
+        return comparisonResult > 0 ? g1 : g2;
+    }
+
     public void checkRoundCount() {
         if (rounds == 0) {
             String winnerStr = computerPlayer.getScore() == humanPlayer.getScore() ? "Tie!" : (humanPlayer.getScore() > computerPlayer.getScore() ? "YOU WON" : "YOU LOST");
             int exit = JOptionPane.showOptionDialog(this, winnerStr, "Rounds Over", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"OK", "RESTART"}, null);
-            System.out.println(exit);
             if (exit == 0 || exit == -1) {
                 System.exit(0);
             } else if (exit == 1) {

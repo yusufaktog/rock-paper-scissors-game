@@ -4,14 +4,14 @@
  * and open the template in the editor.
  */
 
-import Player;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
  * @author joseph
  */
-public class Computer extends Player{
+public class Computer extends Player {
     
     public Computer(String name) {
         super(name);

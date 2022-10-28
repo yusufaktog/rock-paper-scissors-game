@@ -4,12 +4,10 @@
  * and open the template in the editor.
  */
 
-import core.concretes.handlers.ImageHandler;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
- *
  * @author joseph
  */
 public class GameFrame extends JFrame {
@@ -29,7 +27,8 @@ public class GameFrame extends JFrame {
         this.pack();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
-        this.setIconImage(ImageHandler.getScaledImage(new ImageIcon("src\\core\\resources\\gameIcon.jpg"), 128, 128).getImage());
+        this.setIconImage(ImageHandler.getScaledImage(new ImageIcon("src\\core\\resources\\gameIcon.jpg"),
+                128, 128).getImage());
 
     }
 

@@ -9,7 +9,6 @@
  * @author joseph
  */
 
-import core.supers.GameSymbol;
 import java.util.Comparator;
 
 public class PriorityComparator implements Comparator<GameSymbol> {
@@ -27,25 +26,14 @@ public class PriorityComparator implements Comparator<GameSymbol> {
         int flag = 0;
         switch (g1.getPriority() + g2.getPriority()) {
             case 3:
+            case 5:
                 flag = g1.getPriority() - g2.getPriority();
                 break;
             case 4:
                 flag = g2.getPriority() - g1.getPriority();
                 break;
-            case 5:
-                flag = g1.getPriority() - g2.getPriority();
-                break;
         }
         return flag;
-    }
-
-    public GameSymbol determineWinner(GameSymbol g1, GameSymbol g2) {
-        int comparisionResult = new PriorityComparator().compare(g1, g2);
-        if (comparisionResult > 0) {
-            return g1;
-        } else {
-            return g2;
-        }
     }
 
 }
